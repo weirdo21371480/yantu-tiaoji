@@ -5,11 +5,24 @@ import { authenticate, requireAdmin } from '../middleware/auth.js';
 const router = Router();
 
 router.get('/', (req, res) => {
-  const { keyword, subject, location, degree, sort, page = 1, limit = 20 } = req.query;
+  const { keyword, subject, location, degree, sort, page = 1, limit = 20, year, status: qStatus } = req.query;
   const offset = (Math.max(1, parseInt(page)) - 1) * parseInt(limit);
 
-  let where = ['status = ?'];
-  let params = ['active'];
+  let where = [];
+  let params = [];
+
+  if (year) {
+    where.push('year = ?');
+    params.push(parseInt(year));
+  }
+
+  if (qStatus && qStatus !== '全部') {
+    where.push('status = ?');
+    params.push(qStatus);
+  } else if (!year) {
+    where.push('status = ?');
+    params.push('active');
+  }
 
   if (keyword) {
     where.push('(school_name LIKE ? OR subject LIKE ? OR department LIKE ? OR description LIKE ? OR location LIKE ?)');

@@ -11,6 +11,7 @@ import {
 import { api } from '../api';
 import ListingCard from '../components/ListingCard';
 
+const yearOptions = ['2026', '2025', '2024'];
 const degreeTypes = ['全部', '学术型硕士', '专业型硕士'];
 const sortOptions = [
   { value: 'latest', label: '最新发布' },
@@ -28,6 +29,7 @@ export default function Listings() {
   const [selectedSubject, setSelectedSubject] = useState('全部');
   const [selectedLocation, setSelectedLocation] = useState('全部');
   const [selectedDegree, setSelectedDegree] = useState('全部');
+  const [selectedYear, setSelectedYear] = useState('2026');
   const [sortBy, setSortBy] = useState('latest');
   const [showFilters, setShowFilters] = useState(false);
 
@@ -45,7 +47,7 @@ export default function Listings() {
 
   useEffect(() => {
     setLoading(true);
-    const params = { sort: sortBy };
+    const params = { sort: sortBy, year: selectedYear };
     if (keyword.trim()) params.keyword = keyword.trim();
     if (selectedSubject !== '全部') params.subject = selectedSubject;
     if (selectedLocation !== '全部') params.location = selectedLocation;
@@ -55,7 +57,7 @@ export default function Listings() {
       .then((data) => { setListings(data.items); setTotal(data.total); })
       .catch(console.error)
       .finally(() => setLoading(false));
-  }, [keyword, selectedSubject, selectedLocation, selectedDegree, sortBy]);
+  }, [keyword, selectedSubject, selectedLocation, selectedDegree, sortBy, selectedYear]);
 
   const activeFilters = [
     selectedSubject !== '全部' && { label: selectedSubject, clear: () => setSelectedSubject('全部') },
@@ -75,10 +77,21 @@ export default function Listings() {
     <div className="min-h-screen bg-gray-50">
       <div className="bg-white border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">调剂信息</h1>
-          <p className="text-gray-500">
-            共找到 <span className="font-semibold text-primary-600">{total}</span> 条调剂信息
-          </p>
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-2xl font-bold text-gray-900 mb-2">调剂信息</h1>
+              <p className="text-gray-500">
+                共找到 <span className="font-semibold text-primary-600">{total}</span> 条{selectedYear}年调剂信息
+              </p>
+            </div>
+            <div className="flex items-center gap-1 bg-gray-100 rounded-lg p-1">
+              {yearOptions.map((y) => (
+                <button key={y} onClick={() => setSelectedYear(y)} className={`px-4 py-2 text-sm font-medium rounded-md transition-colors ${selectedYear === y ? 'bg-white text-primary-700 shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}>
+                  {y}年
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
 
