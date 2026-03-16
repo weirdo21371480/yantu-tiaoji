@@ -2,6 +2,8 @@
 
 全栈考研调剂信息服务网站，帮助考研学子快速找到适合的调剂院校。
 
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/weirdo21371480/yantu-tiaoji)
+
 ## 技术栈
 
 - **前端**: React 19 + Vite 8 + Tailwind CSS 4 + React Router 7
